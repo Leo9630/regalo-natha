@@ -40,13 +40,17 @@ const Login = ({ onLogin }) => {
   return (
     <div className="login-container">
       <div className="title-card">
-        <h1 className="login-title">CAJA SEGURA DE NATHA ❤️</h1>
+        <h1 className="login-title">
+          CAJA SEGURA DE NATHA <span role="img" aria-label="corazón rojo">❤️</span>
+        </h1>
       </div>
       <div className="login-box">
         <form onSubmit={handleLogin} className="login-form">
           <div className="input-container">
             <div className="input-group">
-              <User className="input-icon" />
+              <span role="img" aria-label="icono de usuario">
+                <User className="input-icon" />
+              </span>
               <input
                 type="text"
                 value={username}
@@ -56,7 +60,9 @@ const Login = ({ onLogin }) => {
               />
             </div>
             <div className="input-group">
-              {isOpen ? <Unlock className="input-icon" /> : <Lock className="input-icon" />}
+              <span role="img" aria-label={isOpen ? "icono de candado abierto" : "icono de candado cerrado"}>
+                {isOpen ? <Unlock className="input-icon" /> : <Lock className="input-icon" />}
+              </span>
               <input
                 type="password"
                 value={password}

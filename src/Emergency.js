@@ -4,8 +4,6 @@ import {
   MessageCircle,
   Youtube,
   ArrowLeft,
-  HelpCircle,
-  Alarm,
   X
 } from 'lucide-react';
 
@@ -14,25 +12,25 @@ const EMERGENCY_CONTACTS = [
     name: "Mamá",
     phone: "3123592432",
     message: "Emergencia: Necesito ayuda urgente.",
-    icon: "👩‍👧"
+    icon: <span role="img" aria-label="Mamá">👩‍👧</span>
   },
   {
     name: "Papá",
     phone: "3114713155",
     message: "Emergencia: Necesito ayuda urgente.",
-    icon: "👨‍👦"
+    icon: <span role="img" aria-label="Papá">👨‍👦</span>
   },
   {
     name: "Hermana",
     phone: "3115283005",
     message: "Emergencia: Necesito ayuda urgente.",
-    icon: "👭"
+    icon: <span role="img" aria-label="Hermana">👭</span>
   },
   {
     name: "Leo",
     phone: "3115283005",
     message: "Emergencia: Necesito ayuda urgente.",
-    icon: "👥"
+    icon: <span role="img" aria-label="Amigo">👥</span>
   }
 ];
 
@@ -84,7 +82,7 @@ const Emergency = ({ onBack }) => {
         <button onClick={onBack} className="back-button">
           <ArrowLeft /> Volver
         </button>
-        <h1>Zona de Emergencia 🚨</h1>
+        <h1>Zona de Emergencia <span role="img" aria-label="Alerta">🚨</span></h1>
       </div>
 
       <div className="emergency-buttons-grid">

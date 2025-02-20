@@ -16,7 +16,7 @@ const MotivationCard = ({ icon, label, emoji, gradient, onClick }) => {
       <div className="card-content">
         {icon}
         <span>{label}</span>
-        {emoji}
+        <span role="img" aria-label="emoji">{emoji}</span>
       </div>
       <div className="card-hover-effect"></div>
     </div>
@@ -47,7 +47,7 @@ const Motivation = ({ onBack }) => {
           <ArrowLeft />
           <span>Volver</span>
         </button>
-        <h1>Motivación ✨</h1>
+        <h1>Motivación <span role="img" aria-label="destellos">✨</span></h1>
         <button
           onClick={openYouTubeLink}
           className="videos-button"
@@ -61,21 +61,21 @@ const Motivation = ({ onBack }) => {
         <MotivationCard
           icon={<Heart className="motivation-icon" />}
           label="Afirmación"
-          emoji="⭐"
+          emoji={<span role="img" aria-label="estrella">⭐</span>}
           gradient="linear-gradient(135deg, #ff69b4, #ff1493)"
           onClick={() => showRandomMessage(afirmaciones, 'Afirmación')}
         />
         <MotivationCard
           icon={<Star className="motivation-icon" />}
           label="Agradecimiento"
-          emoji="💖"
+          emoji={<span role="img" aria-label="corazón">💖</span>}
           gradient="linear-gradient(135deg, #ff4e83, #ff2a6a)"
           onClick={() => showRandomMessage(agradecimientos, 'Agradecimiento')}
         />
         <MotivationCard
           icon={<BookOpen className="motivation-icon" />}
           label="Biblia"
-          emoji="👼"
+          emoji={<span role="img" aria-label="ángel">👼</span>}
           gradient="linear-gradient(135deg, #ff6b9e, #ff3a7f)"
           onClick={() => showRandomMessage(versiculosBiblicos, 'Biblia')}
         />
@@ -84,9 +84,9 @@ const Motivation = ({ onBack }) => {
       {currentMessage && (
         <div className="motivation-message-box">
           <div className="message-type">
-            {currentType === 'Afirmación' && '⭐ Afirmación'}
-            {currentType === 'Agradecimiento' && '💖 Agradecimiento'}
-            {currentType === 'Biblia' && '👼 Versículo Bíblico'}
+            {currentType === 'Afirmación' && <span role="img" aria-label="estrella">⭐</span>} Afirmación
+            {currentType === 'Agradecimiento' && <span role="img" aria-label="corazón">💖</span>} Agradecimiento
+            {currentType === 'Biblia' && <span role="img" aria-label="ángel">👼</span>} Versículo Bíblico
           </div>
           <p>{currentMessage}</p>
         </div>

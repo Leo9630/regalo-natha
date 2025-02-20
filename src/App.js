@@ -31,7 +31,7 @@ function App() {
   return (
     <div className="app">
       <div className="container">
-        <h1 className="title">LA CAJA SEGURA DE NATHA 🌟🎉</h1>
+        <h1 className="title">LA CAJA SEGURA DE NATHA <span role="img" aria-label="destellos">🌟</span><span role="img" aria-label="confeti">🎉</span></h1>
 
         <div className="buttons-container">
           <button
@@ -49,7 +49,7 @@ function App() {
           >
             <BookOpen className="button-icon" />
             <span>Diario</span>
-            <span>📝</span>
+            <span role="img" aria-label="libreta">📝</span>
           </button>
 
           <button
