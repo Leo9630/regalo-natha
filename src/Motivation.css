@@ -1,0 +1,222 @@
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap');
+
+.motivation-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #fff0f5 0%, #ffe4e1 50%, #fff0f5 100%);
+  padding: 20px;
+  font-family: 'Quicksand', sans-serif;
+  overflow: hidden;
+  position: relative;
+}
+
+.motivation-container::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255,105,180,0.1) 0%, transparent 70%);
+  animation: sparkle 10s infinite alternate;
+  z-index: 0;
+}
+
+@keyframes sparkle {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.motivation-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  position: relative;
+  z-index: 1;
+}
+
+.motivation-header h1 {
+  color: #ff69b4;
+  font-size: 2.5rem;
+  margin: 0;
+  text-shadow: 2px 2px 4px rgba(255, 105, 180, 0.2);
+  background: linear-gradient(45deg, #ff69b4, #ff1493);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.back-button, .videos-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.8rem 1.2rem;
+  border: none;
+  border-radius: 20px;
+  background: white;
+  color: #ff69b4;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(255, 105, 180, 0.2);
+  font-weight: 600;
+}
+
+.back-button:hover, .videos-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 15px rgba(255, 105, 180, 0.3);
+}
+
+.videos-button {
+  background: linear-gradient(135deg, #ff69b4, #ff1493);
+  color: white;
+}
+
+.motivation-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+  position: relative;
+  z-index: 1;
+}
+
+.motivation-card {
+  position: relative;
+  border-radius: 20px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  color: white;
+  height: 250px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  perspective: 1000px;
+}
+
+.motivation-card:hover {
+  transform: scale(1.05) rotateX(10deg);
+}
+
+.card-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  position: relative;
+  z-index: 2;
+  text-align: center;
+}
+
+.card-hover-effect {
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.motivation-card:hover .card-hover-effect {
+  opacity: 1;
+}
+
+.motivation-icon {
+  width: 64px;
+  height: 64px;
+  color: white;
+}
+
+.motivation-card span {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: white;
+}
+
+.motivation-message-box {
+  background: white;
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: 0 10px 25px rgba(255, 105, 180, 0.1);
+  text-align: center;
+  font-size: 1.2rem;
+  line-height: 1.6;
+  position: relative;
+  z-index: 1;
+}
+
+.message-type {
+  font-weight: 700;
+  color: #ff69b4;
+  margin-bottom: 1rem;
+  font-size: 1.3rem;
+  text-shadow: 1px 1px 2px rgba(255, 105, 180, 0.2);
+}
+
+@media (max-width: 768px) {
+  .motivation-container {
+    padding: 10px;
+  }
+
+  .motivation-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+  }
+
+  .motivation-header {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .motivation-header h1 {
+    font-size: 1.8rem;
+  }
+
+  .motivation-card {
+    height: 180px;
+  }
+
+  .motivation-icon {
+    width: 48px;
+    height: 48px;
+  }
+
+  .motivation-card span {
+    font-size: 1rem;
+  }
+
+  .back-button, .videos-button {
+    padding: 0.6rem 1rem;
+    font-size: 0.9rem;
+  }
+
+  .motivation-message-box {
+    padding: 1rem;
+    font-size: 1rem;
+  }
+
+  .message-type {
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .motivation-grid {
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 0.3rem;
+  }
+
+  .motivation-card {
+    height: 150px;
+  }
+
+  .motivation-icon {
+    width: 36px;
+    height: 36px;
+  }
+
+  .motivation-card span {
+    font-size: 0.8rem;
+  }
+}

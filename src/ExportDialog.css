@@ -1,0 +1,148 @@
+.export-dialog-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.export-dialog {
+  background: white;
+  border-radius: 20px;
+  padding: 2rem;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.export-dialog-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.export-dialog-header h2 {
+  color: #ff69b4;
+  margin: 0;
+}
+
+.close-button {
+  background: none;
+  border: none;
+  color: #666;
+  cursor: pointer;
+  padding: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.close-button:hover {
+  color: #ff69b4;
+}
+
+.export-filters {
+  margin-bottom: 2rem;
+}
+
+.filter-section {
+  margin-bottom: 1.5rem;
+}
+
+.filter-section h3 {
+  color: #666;
+  margin-bottom: 0.8rem;
+  font-size: 1rem;
+}
+
+.filter-select {
+  width: 100%;
+  padding: 0.8rem;
+  border: 2px solid #ffd1dc;
+  border-radius: 10px;
+  font-size: 1rem;
+  color: #333;
+  transition: all 0.3s ease;
+}
+
+.filter-select:focus {
+  outline: none;
+  border-color: #ff69b4;
+  box-shadow: 0 0 10px rgba(255, 105, 180, 0.2);
+}
+
+.date-range {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.date-input {
+  flex: 1;
+  padding: 0.8rem;
+  border: 2px solid #ffd1dc;
+  border-radius: 10px;
+  font-size: 1rem;
+  color: #333;
+  transition: all 0.3s ease;
+}
+
+.date-input:focus {
+  outline: none;
+  border-color: #ff69b4;
+  box-shadow: 0 0 10px rgba(255, 105, 180, 0.2);
+}
+
+.export-actions {
+  display: flex;
+  gap: 1rem;
+}
+
+.export-button {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.export-button.word {
+  background: #2b579a;
+  color: white;
+}
+
+.export-button.pdf {
+  background: #ff4444;
+  color: white;
+}
+
+.export-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+@media (max-width: 768px) {
+  .export-dialog {
+    width: 95%;
+    padding: 1.5rem;
+  }
+
+  .export-actions {
+    flex-direction: column;
+  }
+
+  .date-range {
+    flex-direction: column;
+  }
+}

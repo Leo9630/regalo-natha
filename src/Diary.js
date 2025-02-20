@@ -1,200 +1,275 @@
 import React, { useState, useEffect } from 'react';
-import { Lock, ArrowLeft, Settings } from 'lucide-react';
+import {
+  ArrowLeft, Search, Star, Filter, Download
+} from 'lucide-react';
+import DiaryLock from './DiaryLock';
+import ExportDialog from './ExportDialog';
+import './Diary.css';
 
-function Diary({ onBack }) {
-  const [password, setPassword] = useState('');
-  const [newPassword, setNewPassword] = useState('');
-  const [hasPassword, setHasPassword] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [entry, setEntry] = useState('');
+const MOODS = [
+  { emoji: '😊', label: 'Feliz', value: 'happy' },
+  { emoji: '😔', label: 'Triste', value: 'sad' },
+  { emoji: '😌', label: 'Tranquila', value: 'calm' },
+  { emoji: '🥰', label: 'Enamorada', value: 'loved' },
+  { emoji: '😤', label: 'Frustrada', value: 'frustrated' },
+  { emoji: '🤗', label: 'Agradecida', value: 'grateful' },
+  { emoji: '✨', label: 'Inspirada', value: 'inspired' },
+  { emoji: '💪', label: 'Fuerte', value: 'strong' }
+];
+
+const CATEGORIES = [
+  { icon: '🙏', label: 'Gratitud', value: 'gratitude' },
+  { icon: '💭', label: 'Reflexiones', value: 'reflections' },
+  { icon: '🎯', label: 'Metas', value: 'goals' },
+  { icon: '💝', label: 'Amor', value: 'love' },
+  { icon: '✨', label: 'Logros', value: 'achievements' },
+  { icon: '📖', label: 'Aprendizajes', value: 'lessons' },
+  { icon: '🙌', label: 'Celebraciones', value: 'celebrations' }
+];
+
+const Diary = ({ onBack }) => {
   const [entries, setEntries] = useState([]);
-  const [showChangePassword, setShowChangePassword] = useState(false);
+  const [currentEntry, setCurrentEntry] = useState('');
+  const [selectedMood, setSelectedMood] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [showFilters, setShowFilters] = useState(false);
+  const [filterMood, setFilterMood] = useState('');
+  const [filterCategory, setFilterCategory] = useState('');
+  const [showExportDialog, setShowExportDialog] = useState(false);
+  const [isLocked, setIsLocked] = useState(true);
 
   useEffect(() => {
-    const storedPassword = localStorage.getItem('diaryPassword');
-    const storedEntries = localStorage.getItem('diaryEntries');
-    if (storedPassword) {
-      setHasPassword(true);
-    }
-    if (storedEntries) {
-      setEntries(JSON.parse(storedEntries));
+    const savedEntries = localStorage.getItem('diaryEntries');
+    if (savedEntries) {
+      setEntries(JSON.parse(savedEntries));
     }
   }, []);
 
-  const handleSetPassword = () => {
-    if (password.length >= 5 && /^\d+$/.test(password)) {
-      localStorage.setItem('diaryPassword', password);
-      setHasPassword(true);
-      setIsAuthenticated(true);
-    } else {
-      alert('La contraseña debe tener al menos 5 números');
-    }
-  };
-
-  const handleChangePassword = () => {
-    if (newPassword.length >= 5 && /^\d+$/.test(newPassword)) {
-      localStorage.setItem('diaryPassword', newPassword);
-      setShowChangePassword(false);
-      alert('Contraseña cambiada exitosamente');
-    } else {
-      alert('La nueva contraseña debe tener al menos 5 números');
-    }
-  };
-
-  const handleLogin = () => {
-    const storedPassword = localStorage.getItem('diaryPassword');
-    if (password === storedPassword) {
-      setIsAuthenticated(true);
-    } else {
-      alert('Contraseña incorrecta');
-    }
+  const handleSearch = () => {
+    // La búsqueda ya está implementada en el filtrado de entradas,
+    // pero podríamos añadir funcionalidad adicional aquí si se necesita
   };
 
   const handleSaveEntry = () => {
-    if (entry.trim()) {
-      const now = new Date();
+    if (currentEntry.trim()) {
       const newEntry = {
-        date: now.toLocaleDateString('es-ES', {
-          weekday: 'long',
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric',
-          hour: '2-digit',
-          minute: '2-digit'
-        }),
-        text: entry,
-        timestamp: now.getTime()
+        id: Date.now(),
+        text: currentEntry,
+        date: new Date().toISOString(),
+        mood: selectedMood,
+        category: selectedCategory,
+        isFavorite: false
       };
+
       const updatedEntries = [newEntry, ...entries];
       setEntries(updatedEntries);
       localStorage.setItem('diaryEntries', JSON.stringify(updatedEntries));
-      setEntry('');
+
+      // Reset form
+      setCurrentEntry('');
+      setSelectedMood('');
+      setSelectedCategory('');
     }
   };
+
+  const toggleFavorite = (entryId) => {
+    const updatedEntries = entries.map(entry =>
+      entry.id === entryId
+        ? { ...entry, isFavorite: !entry.isFavorite }
+        : entry
+    );
+    setEntries(updatedEntries);
+    localStorage.setItem('diaryEntries', JSON.stringify(updatedEntries));
+  };
+
+  const filteredEntries = entries.filter(entry => {
+    const matchesSearch = entry.text.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesMood = !filterMood || entry.mood === filterMood;
+    const matchesCategory = !filterCategory || entry.category === filterCategory;
+    return matchesSearch && matchesMood && matchesCategory;
+  });
+
+  // Si el diario está bloqueado, mostrar el componente de bloqueo
+  if (isLocked) {
+    return (
+      <DiaryLock
+        onUnlock={() => setIsLocked(false)}
+        onClose={onBack}
+      />
+    );
+  }
 
   return (
     <div className="diary-container">
       <div className="diary-header">
         <button onClick={onBack} className="back-button">
-          <ArrowLeft /> Volver
+          <ArrowLeft />
+          <span>Volver</span>
         </button>
-        {isAuthenticated && (
-          <button
-            onClick={() => setShowChangePassword(!showChangePassword)}
-            className="settings-button"
-          >
-            <Settings /> Cambiar Contraseña
+        <h1>Mi Diario Personal ✨</h1>
+        <div className="header-actions">
+          <button onClick={() => setShowExportDialog(true)} className="export-button">
+            <Download />
           </button>
-        )}
+        </div>
       </div>
 
-      {!hasPassword ? (
-        <div className="password-setup">
-          <div className="password-welcome">
-            <h2>✨ Bienvenida a tu Diario Personal ✨</h2>
-            <p className="password-intro">
-              Este es un espacio seguro para tus pensamientos.
-              Vamos a protegerlo con una contraseña especial.
-            </p>
-          </div>
-          <div className="password-card">
-            <div className="password-header">
-              <Lock className="lock-icon" />
-              <h3>Crea tu Contraseña</h3>
-            </div>
-            <p className="password-instructions">
-              Elige una contraseña de 5 números que puedas recordar fácilmente
-            </p>
-            <div className="password-input-container">
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="•••••"
-                className="password-input"
-                maxLength="10"
-              />
-            </div>
-            <p className="password-hint">
-              🔐 Mínimo 5 números para mantener seguro tu diario
-            </p>
-            <button onClick={handleSetPassword} className="password-button">
-              Crear mi Diario Personal 📖
-            </button>
-          </div>
+      {showExportDialog && (
+        <ExportDialog
+          isOpen={showExportDialog}
+          onClose={() => setShowExportDialog(false)}
+          entries={entries}
+          moods={MOODS}
+          categories={CATEGORIES}
+        />
+      )}
+
+      <div className="search-bar">
+        <div className="search-input-container">
+          <Search className="search-icon" />
+          <input
+            type="text"
+            placeholder="Buscar en mi diario..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
         </div>
-      ) : !isAuthenticated ? (
-        <div className="password-setup">
-          <div className="password-welcome">
-            <h2>💖 Bienvenida de Nuevo 💖</h2>
-            <p className="password-intro">
-              Tu diario te está esperando...
-            </p>
-          </div>
-          <div className="password-card">
-            <div className="password-header">
-              <Lock className="lock-icon" />
-              <h3>Ingresa tu Contraseña</h3>
+        <button onClick={handleSearch} className="search-button">
+          <Search />
+        </button>
+        <button
+          className={`filter-button ${showFilters ? 'active' : ''}`}
+          onClick={() => setShowFilters(!showFilters)}
+        >
+          <Filter />
+        </button>
+      </div>
+
+      {showFilters && (
+        <div className="filters-panel">
+          <div className="filter-group">
+            <h3>Estado de ánimo</h3>
+            <div className="mood-filters">
+              {MOODS.map(mood => (
+                <button
+                  key={mood.value}
+                  className={`mood-filter ${filterMood === mood.value ? 'active' : ''}`}
+                  onClick={() => setFilterMood(filterMood === mood.value ? '' : mood.value)}
+                >
+                  <span className="mood-emoji">{mood.emoji}</span>
+                  <span className="mood-label">{mood.label}</span>
+                </button>
+              ))}
             </div>
-            <div className="password-input-container">
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="•••••"
-                className="password-input"
-                maxLength="10"
-              />
+          </div>
+          <div className="filter-group">
+            <h3>Categoría</h3>
+            <div className="category-filters">
+              {CATEGORIES.map(category => (
+                <button
+                  key={category.value}
+                  className={`category-filter ${filterCategory === category.value ? 'active' : ''}`}
+                  onClick={() => setFilterCategory(filterCategory === category.value ? '' : category.value)}
+                >
+                  {category.icon} {category.label}
+                </button>
+              ))}
             </div>
-            <button onClick={handleLogin} className="password-button">
-              Abrir mi Diario 🗝️
-            </button>
-          </div>
-        </div>
-      ) : showChangePassword ? (
-        <div className="password-change">
-          <h2>Cambiar Contraseña</h2>
-          <div className="password-input-container">
-            <Lock className="input-icon" />
-            <input
-              type="password"
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-              placeholder="Nueva contraseña (mínimo 5 números)"
-              className="password-input"
-            />
-          </div>
-          <button onClick={handleChangePassword} className="diary-button">
-            Actualizar Contraseña
-          </button>
-        </div>
-      ) : (
-        <div className="diary-content">
-          <h2>💖 Mi Diario Personal 📖</h2>
-          <div className="entry-section">
-            <textarea
-              value={entry}
-              onChange={(e) => setEntry(e.target.value)}
-              placeholder="Escribe aquí tus pensamientos..."
-              className="entry-input"
-              rows="10"
-            />
-            <button onClick={handleSaveEntry} className="diary-button">
-              Guardar Entrada 💝
-            </button>
-          </div>
-          <div className="entries-list">
-            {entries.map((entry, index) => (
-              <div key={index} className="entry-card">
-                <div className="entry-date">{entry.date}</div>
-                <div className="entry-text">{entry.text}</div>
-              </div>
-            ))}
           </div>
         </div>
       )}
+
+      <div className="new-entry-section">
+        <textarea
+          value={currentEntry}
+          onChange={(e) => setCurrentEntry(e.target.value)}
+          placeholder="¿Qué hay en tu corazón hoy?"
+          className="entry-input"
+        />
+
+        <div className="entry-metadata">
+          <div className="mood-selection">
+            <h3>¿Cómo te sientes hoy?</h3>
+            <div className="mood-selector">
+              {MOODS.map(mood => (
+                <button
+                  key={mood.value}
+                  className={`mood-button ${selectedMood === mood.value ? 'active' : ''}`}
+                  onClick={() => setSelectedMood(mood.value)}
+                >
+                  <span className="mood-emoji">{mood.emoji}</span>
+                  <span className="mood-label">{mood.label}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="category-selection">
+            <h3>Categoría</h3>
+            <div className="category-selector">
+              {CATEGORIES.map(category => (
+                <button
+                  key={category.value}
+                  className={`category-button ${selectedCategory === category.value ? 'active' : ''}`}
+                  onClick={() => setSelectedCategory(category.value)}
+                >
+                  <span className="category-icon">{category.icon}</span>
+                  <span className="category-label">{category.label}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <button onClick={handleSaveEntry} className="save-button">
+          Guardar entrada
+        </button>
+      </div>
+
+      <div className="entries-list">
+        {filteredEntries.map(entry => (
+          <div key={entry.id} className="entry-card">
+            <div className="entry-header">
+              <div className="entry-meta">
+                <span className="entry-date">
+                  {new Date(entry.date).toLocaleDateString('es-ES', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                  })}
+                </span>
+                {entry.mood && (
+                  <span className="entry-mood">
+                    {MOODS.find(m => m.value === entry.mood)?.emoji}
+                    <span className="mood-label">
+                      {MOODS.find(m => m.value === entry.mood)?.label}
+                    </span>
+                  </span>
+                )}
+                {entry.category && (
+                  <span className="entry-category">
+                    {CATEGORIES.find(c => c.value === entry.category)?.icon}
+                    <span className="category-label">
+                      {CATEGORIES.find(c => c.value === entry.category)?.label}
+                    </span>
+                  </span>
+                )}
+              </div>
+              <button
+                className={`favorite-button ${entry.isFavorite ? 'active' : ''}`}
+                onClick={() => toggleFavorite(entry.id)}
+              >
+                <Star />
+              </button>
+            </div>
+            <div className="entry-content">{entry.text}</div>
+          </div>
+        ))}
+      </div>
     </div>
   );
-}
+};
 
 export default Diary;

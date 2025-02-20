@@ -1,75 +1,66 @@
-import { afirmaciones, agradecimientos, versiculosBiblicos } from './frases';
 import React, { useState } from 'react';
-import { Heart, Star, BookOpen, Book } from 'lucide-react';
+import { Sparkles, BookOpen, AlertOctagon } from 'lucide-react';
 import './App.css';
+import Login from './Login';
 import Diary from './Diary';
+import Motivation from './Motivation';
+import Emergency from './Emergency';
 
 function App() {
-  const [currentMessage, setCurrentMessage] = useState('');
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showDiary, setShowDiary] = useState(false);
-  const [animationClass, setAnimationClass] = useState('');
+  const [showMotivation, setShowMotivation] = useState(false);
+  const [showEmergency, setShowEmergency] = useState(false);
 
-  const showRandomMessage = (array) => {
-    setAnimationClass('message-exit');
-    setTimeout(() => {
-      const randomIndex = Math.floor(Math.random() * array.length);
-      setCurrentMessage(array[randomIndex]);
-      setAnimationClass('message-enter');
-    }, 300);
-  };
+  if (!isLoggedIn) {
+    return <Login onLogin={() => setIsLoggedIn(true)} />;
+  }
 
   if (showDiary) {
     return <Diary onBack={() => setShowDiary(false)} />;
   }
 
+  if (showMotivation) {
+    return <Motivation onBack={() => setShowMotivation(false)} />;
+  }
+
+  if (showEmergency) {
+    return <Emergency onBack={() => setShowEmergency(false)} />;
+  }
+
   return (
     <div className="app">
       <div className="container">
-        <h1 className="title">Para Natha: Se vale ser feliz 🌟🎉</h1>
+        <h1 className="title">LA CAJA SEGURA DE NATHA 🌟🎉</h1>
 
         <div className="buttons-container">
           <button
-            onClick={() => showRandomMessage(afirmaciones)}
-            className="button afirmacion"
+            onClick={() => setShowMotivation(true)}
+            className="button motivation"
           >
-            <Heart className="button-icon" />
-            <span>Afirmación</span>
-            <Star className="button-icon" />
-          </button>
-
-          <button
-            onClick={() => showRandomMessage(agradecimientos)}
-            className="button agradecimiento"
-          >
-            <Star className="button-icon" />
-            <span>Agradecimiento</span>
-            <Heart className="button-icon" />
-          </button>
-
-          <button
-            onClick={() => showRandomMessage(versiculosBiblicos)}
-            className="button biblia"
-          >
-            <BookOpen className="button-icon" />
-            <span>Biblia</span>
-            <span>👼</span>
+            <Sparkles className="button-icon" />
+            <span>Motivación</span>
+            <Sparkles className="button-icon" />
           </button>
 
           <button
             onClick={() => setShowDiary(true)}
             className="button diario"
           >
-            <Book className="button-icon" />
+            <BookOpen className="button-icon" />
             <span>Diario</span>
             <span>📝</span>
           </button>
-        </div>
 
-        {currentMessage && (
-          <div className={`message-box ${animationClass}`}>
-            <p>{currentMessage}</p>
-          </div>
-        )}
+          <button
+            onClick={() => setShowEmergency(true)}
+            className="button emergency"
+          >
+            <AlertOctagon className="button-icon" />
+            <span>Emergencia</span>
+            <AlertOctagon className="button-icon" />
+          </button>
+        </div>
       </div>
     </div>
   );
